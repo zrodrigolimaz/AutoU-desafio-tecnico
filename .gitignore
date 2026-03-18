@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+dist/
+build/
+.parcel-cache/
+.npm/
+.yarn/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+.env
+
+# Temporary
+/tmp/
+*.log
+.DS_Store
