@@ -8,7 +8,7 @@ env:
   AWS_REGION: us-east-1
   ECR_REPO: meridian-backend
   APP_RUNNER_SERVICE: meridian-backend
-  S3_BUCKET: meridian-frontend-prod
+  S3_BUCKET: ${{ secrets.S3_BUCKET }}
 
 jobs:
   # ─────────────────────────────────────────
@@ -58,12 +58,9 @@ jobs:
           cpu: 0.25
           memory: 0.5
           wait-for-service-stability: true
-          copy-env-vars: |
-            GOOGLE_API_KEY
-            CORS_ORIGINS
-        env:
-          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
-          CORS_ORIGINS: ${{ secrets.CLOUDFRONT_URL }}
+          env-vars: |
+            GOOGLE_API_KEY=${{ secrets.GOOGLE_API_KEY }}
+            CORS_ORIGINS=${{ secrets.CLOUDFRONT_URL }}
 
       - name: Get App Runner service URL
         id: get-url
