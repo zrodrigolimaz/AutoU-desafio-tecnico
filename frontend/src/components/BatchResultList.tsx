@@ -16,7 +16,7 @@ export function BatchResultList({ items }: Props) {
       {/* Progress header */}
       <div className="flex items-center justify-between">
         <p className="text-[10px] font-mono text-text-muted tracking-[0.18em] uppercase">
-          — Análise em lote
+          Análise em lote
         </p>
         <span className="text-[10px] font-mono text-text-muted">
           {done}/{total} concluídos
@@ -50,7 +50,7 @@ export function BatchResultList({ items }: Props) {
           )}
 
           {item.status === 'processing' && (
-            <div className="glass glass-border rounded-xl p-5 flex items-center gap-3">
+            <div className="bg-bg-surface border border-border-subtle rounded p-5 flex items-center gap-3">
               <Loader2 size={14} className="animate-spin text-accent-lime flex-shrink-0" />
               <span className="text-sm text-text-muted">Classificando com IA...</span>
             </div>

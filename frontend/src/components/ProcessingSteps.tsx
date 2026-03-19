@@ -12,7 +12,7 @@ export function ProcessingSteps({ steps }: Props) {
       {/* Steps List */}
       <div className="bg-bg-surface border border-border-subtle rounded-xl p-5 shadow-sm">
         <p className="text-[10px] font-mono text-text-muted tracking-[0.18em] uppercase mb-5">
-          — Pipeline de Análise
+          Pipeline de Análise
         </p>
         <div className="flex flex-col gap-0">
           {steps.map((step, index) => (
@@ -24,7 +24,7 @@ export function ProcessingSteps({ steps }: Props) {
                       ? 'bg-accent-productive border-accent-productive text-bg-base'
                       : step.status === 'active'
                       ? 'bg-accent-lime/10 border-accent-lime text-accent-lime'
-                      : 'bg-white/5 border-border-subtle text-text-muted'
+                      : 'bg-border-subtle border-border-subtle text-text-muted'
                   }`}
                 >
                   {step.status === 'done' ? (
@@ -66,28 +66,28 @@ export function ProcessingSteps({ steps }: Props) {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="glass glass-border rounded-xl p-6 flex flex-col gap-6 animate-pulse"
+        className="bg-bg-surface border border-border-subtle rounded p-6 flex flex-col gap-6 animate-pulse"
       >
         <div className="flex items-center gap-3">
-          <div className="w-24 h-6 bg-white/10 rounded-full" />
-          <div className="w-32 h-6 bg-white/5 rounded-full" />
-          <div className="w-20 h-6 bg-white/5 rounded-full" />
+          <div className="w-24 h-6 bg-bg-elevated rounded-full" />
+          <div className="w-32 h-6 bg-border-subtle rounded-full" />
+          <div className="w-20 h-6 bg-border-subtle rounded-full" />
         </div>
         
-        <div className="h-px bg-white/5" />
+        <div className="h-px bg-border-subtle" />
         
         <div className="flex flex-col gap-4">
-          <div className="w-1/3 h-3 bg-white/5 rounded" />
+          <div className="w-1/3 h-3 bg-border-subtle rounded" />
           <div className="space-y-3">
-            <div className="w-full h-4 bg-white/10 rounded" />
-            <div className="w-full h-4 bg-white/10 rounded" />
-            <div className="w-2/3 h-4 bg-white/10 rounded" />
+            <div className="w-full h-4 bg-bg-elevated rounded" />
+            <div className="w-full h-4 bg-bg-elevated rounded" />
+            <div className="w-2/3 h-4 bg-bg-elevated rounded" />
           </div>
         </div>
         
         <div className="flex items-center justify-between pt-2">
-          <div className="w-24 h-4 bg-white/5 rounded" />
-          <div className="w-16 h-8 bg-white/10 rounded-lg" />
+          <div className="w-24 h-4 bg-border-subtle rounded" />
+          <div className="w-16 h-8 bg-bg-elevated rounded-lg" />
         </div>
       </motion.div>
     </div>

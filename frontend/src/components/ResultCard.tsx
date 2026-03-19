@@ -64,7 +64,7 @@ export function ResultCard({ result }: Props) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
-      className="glass glass-border rounded-xl p-6 flex flex-col gap-6 shadow-2xl"
+      className="bg-bg-surface border border-border-subtle rounded p-6 flex flex-col gap-6"
     >
       {/* Header Info */}
       <div className="flex flex-wrap items-center justify-between gap-4">
@@ -80,7 +80,7 @@ export function ResultCard({ result }: Props) {
             {result.category}
           </div>
           
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-text-secondary">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-bg-elevated border border-border-subtle text-xs font-medium text-text-secondary">
             <Bookmark size={12} className="text-text-muted" />
             {result.topic}
           </div>
@@ -108,7 +108,7 @@ export function ResultCard({ result }: Props) {
             {Math.round(result.confidence * 100)}%
           </span>
         </div>
-        <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
+        <div className="h-1.5 w-full bg-bg-elevated rounded-full overflow-hidden border border-border-subtle">
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${result.confidence * 100}%` }}
@@ -120,7 +120,7 @@ export function ResultCard({ result }: Props) {
       </div>
       </div>
 
-      <div className="h-px bg-white/5" />
+      <div className="h-px bg-border-subtle" />
 
       {/* Suggested reply section */}
       <div className="flex flex-col gap-4">
@@ -128,13 +128,13 @@ export function ResultCard({ result }: Props) {
           <div className="flex items-center gap-2">
             <MessageSquare size={14} className="text-accent-lime" />
             <p className="text-[10px] font-mono text-text-muted tracking-[0.18em] uppercase">
-              — Sugestão de Resposta
+              Sugestão de Resposta
             </p>
           </div>
           
           <button
             onClick={copyReply}
-            className="group flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-text-secondary hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg transition-all"
+            className="group flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-text-secondary hover:text-text-primary bg-bg-elevated hover:bg-bg-surface border border-border-subtle rounded transition-colors"
           >
             <AnimatePresence mode="wait">
               {copied ? (
@@ -164,40 +164,24 @@ export function ResultCard({ result }: Props) {
           </button>
         </div>
 
-        <div className="relative group">
+        <div className="relative">
           <textarea
             ref={replyTextareaRef}
             value={editableReply}
             onChange={(e) => setEditableReply(e.target.value)}
             style={replyHeight ? { height: replyHeight } : undefined}
-            className="w-full min-h-[140px] bg-bg-elevated/50 text-sm text-text-secondary leading-relaxed p-4 pb-6 rounded-xl border border-border-subtle focus:border-accent-lime/30 focus:ring-1 focus:ring-accent-lime/20 outline-none transition-all resize-none overflow-y-auto shadow-inner [scrollbar-gutter:stable]"
+            className="w-full min-h-[140px] bg-bg-elevated/50 text-sm text-text-secondary leading-relaxed p-4 pb-6 rounded border border-border-subtle focus:border-accent-lime/30 focus:ring-1 focus:ring-accent-lime/20 outline-none transition-colors resize-none overflow-y-auto shadow-inner [scrollbar-gutter:stable]"
             placeholder="A resposta sugerida aparecerá aqui..."
           />
-          <div className="absolute right-10 bottom-5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-            <span className="text-[9px] font-mono text-text-muted uppercase">Editável</span>
-          </div>
           <div
             onMouseDown={handleResizeMouseDown}
-            className="absolute bottom-0 left-0 right-0 h-7 cursor-ns-resize select-none group/handle rounded-b-xl"
+            className="absolute bottom-0 left-0 right-0 h-7 cursor-ns-resize select-none group/handle rounded-b"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 512 512" style={{ transform: 'rotate(90deg)' }} className="absolute bottom-2 right-2 text-border-subtle group-hover/handle:text-border-default transition-colors duration-150"><path fill="none" stroke="currentColor" strokeLinecap="square" strokeMiterlimit="10" strokeWidth="32" d="M304 96h112v112m-10.23-101.8L111.98 400.02M208 416H96V304"/></svg>
           </div>
         </div>
       </div>
 
-      {/* Processed text preview */}
-      {result.processed_text && (
-        <details className="group cursor-pointer">
-          <summary className="text-[10px] font-mono text-text-muted hover:text-text-secondary transition-colors select-none">
-            LOG DE PRÉ-PROCESSAMENTO (NLP)
-          </summary>
-          <div className="mt-4 bg-bg-elevated rounded-lg p-4 border border-border-subtle">
-            <p className="text-[11px] font-mono text-text-muted/80 leading-relaxed italic">
-              {result.processed_text}
-            </p>
-          </div>
-        </details>
-      )}
     </motion.div>
   )
 }

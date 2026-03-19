@@ -38,14 +38,9 @@ export function Home({ theme, toggleTheme }: Props) {
         {/* Header */}
         <header className="flex items-end justify-between border-b border-border-subtle pb-6">
           <div>
-            <div className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded-lg bg-accent-lime/10 border border-accent-lime/30 flex items-center justify-center">
-                <span className="font-mono text-xs font-bold text-accent-lime">M</span>
-              </div>
-              <span className="font-mono text-sm text-text-muted tracking-wider uppercase">
-                Meridian
-              </span>
-            </div>
+            <span className="font-mono text-sm text-text-primary tracking-wide">
+              Meridian
+            </span>
           </div>
           <div className="flex items-center gap-4 mb-0.5">
             <button
@@ -55,12 +50,6 @@ export function Home({ theme, toggleTheme }: Props) {
             >
               {theme === 'dark' ? <Sun size={13} /> : <Moon size={13} />}
             </button>
-            <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-accent-lime animate-pulse-dot" />
-              <span className="text-[10px] font-mono text-text-muted tracking-[0.15em] uppercase">
-                Sistema Ativo
-              </span>
-            </div>
           </div>
         </header>
 
@@ -89,7 +78,7 @@ export function Home({ theme, toggleTheme }: Props) {
             {/* Input card */}
             <div className="bg-bg-surface border border-border-subtle rounded p-6">
               <p className="text-[10px] font-mono text-text-muted tracking-[0.18em] uppercase mb-5">
-                — Email para análise
+                Email para análise
               </p>
               <EmailInput
                 onSubmit={handleSubmit}
@@ -120,7 +109,7 @@ export function Home({ theme, toggleTheme }: Props) {
           {/* Right: History sidebar */}
           <aside className="bg-bg-surface border border-border-subtle rounded p-5 lg:sticky lg:top-6">
             <p className="text-[10px] font-mono text-text-muted tracking-[0.18em] uppercase mb-4">
-              — Histórico da sessão
+              Histórico da sessão
             </p>
             <HistoryList
               items={history}
