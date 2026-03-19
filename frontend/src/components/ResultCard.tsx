@@ -173,7 +173,7 @@ export function ResultCard({ result }: Props) {
             className="w-full min-h-[140px] bg-bg-elevated/50 text-sm text-text-secondary leading-relaxed p-4 pb-6 rounded-xl border border-border-subtle focus:border-accent-lime/30 focus:ring-1 focus:ring-accent-lime/20 outline-none transition-all resize-none overflow-y-auto shadow-inner [scrollbar-gutter:stable]"
             placeholder="A resposta sugerida aparecerá aqui..."
           />
-          <div className="absolute right-3 bottom-5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+          <div className="absolute right-10 bottom-5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
             <span className="text-[9px] font-mono text-text-muted uppercase">Editável</span>
           </div>
           <div
