@@ -66,8 +66,9 @@ export function useClassify() {
 
       setResult(data)
       addToHistory(preview, data)
-    } catch {
-      setError('Erro ao processar o email. Verifique a conexão com o servidor.')
+    } catch (err) {
+      const detail = (err as any)?.response?.data?.detail
+      setError(typeof detail === 'string' ? detail : 'Erro ao processar o email. Verifique a conexão com o servidor.')
       setSteps(INITIAL_STEPS)
     } finally {
       setLoading(false)
@@ -99,9 +100,10 @@ export function useClassify() {
           prev.map((item, idx) => idx === i ? { ...item, result: data, status: 'done' } : item)
         )
         addToHistory(file.name, data)
-      } catch {
+      } catch (err) {
+        const detail = (err as any)?.response?.data?.detail
         setBatchResults(prev =>
-          prev.map((item, idx) => idx === i ? { ...item, error: 'Erro ao processar arquivo.', status: 'error' } : item)
+          prev.map((item, idx) => idx === i ? { ...item, error: typeof detail === 'string' ? detail : 'Erro ao processar arquivo.', status: 'error' } : item)
         )
       }
     }

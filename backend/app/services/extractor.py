@@ -12,7 +12,10 @@ def extract_from_bytes(content: bytes, filename: str) -> str:
 
 
 def _extract_pdf(content: bytes) -> str:
-    doc = fitz.open(stream=content, filetype="pdf")
+    try:
+        doc = fitz.open(stream=content, filetype="pdf")
+    except Exception as exc:
+        raise ValueError("O PDF está corrompido ou não é um arquivo PDF válido.") from exc
     pages = [page.get_text("text") for page in doc]
     doc.close()
     text = "\n".join(pages).strip()
