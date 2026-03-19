@@ -119,9 +119,9 @@ export function EmailInput({ onSubmit, onSubmitBatch, disabled }: Props) {
           />
           <div
             onMouseDown={handleResizeMouseDown}
-            className="absolute bottom-0 left-0 right-0 h-5 flex items-center justify-center cursor-ns-resize select-none group"
+            className="absolute bottom-0 left-0 right-0 h-7 cursor-ns-resize select-none group"
           >
-            <div className="w-8 h-1 rounded-full bg-border-subtle group-hover:bg-border-default transition-colors duration-150" />
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 512 512" style={{ transform: 'rotate(90deg)' }} className="absolute bottom-2 right-2 text-border-subtle group-hover:text-border-default transition-colors duration-150"><path fill="none" stroke="currentColor" strokeLinecap="square" strokeMiterlimit="10" strokeWidth="32" d="M304 96h112v112m-10.23-101.8L111.98 400.02M208 416H96V304"/></svg>
           </div>
         </div>
       ) : (
@@ -190,7 +190,7 @@ export function EmailInput({ onSubmit, onSubmitBatch, disabled }: Props) {
         disabled={!canSubmit}
         className={`flex items-center justify-center gap-2 w-full py-3 rounded font-display font-bold text-sm tracking-wide transition-all duration-200 ${
           canSubmit
-            ? 'bg-text-primary text-bg-base hover:bg-white transition-colors'
+            ? 'bg-text-primary text-bg-base hover:opacity-80 transition-opacity'
             : 'bg-bg-elevated text-text-muted cursor-not-allowed'
         }`}
       >

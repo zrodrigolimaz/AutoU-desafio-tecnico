@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Check, Copy, AlertCircle, Bookmark, MessageSquare } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { ClassifyResult } from '../types'
@@ -11,6 +11,33 @@ export function ResultCard({ result }: Props) {
   const [copied, setCopied] = useState(false)
   const [editableReply, setEditableReply] = useState(result.suggested_reply)
   const isProductive = result.category === 'Produtivo'
+  const replyTextareaRef = useRef<HTMLTextAreaElement>(null)
+  const [replyHeight, setReplyHeight] = useState<number | null>(null)
+  const resizeDragRef = useRef<{ startY: number; startHeight: number } | null>(null)
+
+  const handleResizeMouseDown = (e: React.MouseEvent) => {
+    if (!replyTextareaRef.current) return
+    e.preventDefault()
+    resizeDragRef.current = {
+      startY: e.clientY,
+      startHeight: replyTextareaRef.current.getBoundingClientRect().height,
+    }
+  }
+
+  useEffect(() => {
+    const onMouseMove = (e: MouseEvent) => {
+      if (!resizeDragRef.current) return
+      const delta = e.clientY - resizeDragRef.current.startY
+      setReplyHeight(Math.max(120, resizeDragRef.current.startHeight + delta))
+    }
+    const onMouseUp = () => { resizeDragRef.current = null }
+    window.addEventListener('mousemove', onMouseMove)
+    window.addEventListener('mouseup', onMouseUp)
+    return () => {
+      window.removeEventListener('mousemove', onMouseMove)
+      window.removeEventListener('mouseup', onMouseUp)
+    }
+  }, [])
 
   useEffect(() => {
     setEditableReply(result.suggested_reply)
@@ -139,13 +166,21 @@ export function ResultCard({ result }: Props) {
 
         <div className="relative group">
           <textarea
+            ref={replyTextareaRef}
             value={editableReply}
             onChange={(e) => setEditableReply(e.target.value)}
-            className="w-full min-h-[140px] bg-bg-elevated/50 text-sm text-text-secondary leading-relaxed p-4 rounded-xl border border-border-subtle focus:border-accent-lime/30 focus:ring-1 focus:ring-accent-lime/20 outline-none transition-all resize-y shadow-inner"
+            style={replyHeight ? { height: replyHeight } : undefined}
+            className="w-full min-h-[140px] bg-bg-elevated/50 text-sm text-text-secondary leading-relaxed p-4 pb-6 rounded-xl border border-border-subtle focus:border-accent-lime/30 focus:ring-1 focus:ring-accent-lime/20 outline-none transition-all resize-none overflow-y-auto shadow-inner [scrollbar-gutter:stable]"
             placeholder="A resposta sugerida aparecerá aqui..."
           />
-          <div className="absolute right-3 bottom-3 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+          <div className="absolute right-3 bottom-5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
             <span className="text-[9px] font-mono text-text-muted uppercase">Editável</span>
+          </div>
+          <div
+            onMouseDown={handleResizeMouseDown}
+            className="absolute bottom-0 left-0 right-0 h-7 cursor-ns-resize select-none group/handle rounded-b-xl"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 512 512" style={{ transform: 'rotate(90deg)' }} className="absolute bottom-2 right-2 text-border-subtle group-hover/handle:text-border-default transition-colors duration-150"><path fill="none" stroke="currentColor" strokeLinecap="square" strokeMiterlimit="10" strokeWidth="32" d="M304 96h112v112m-10.23-101.8L111.98 400.02M208 416H96V304"/></svg>
           </div>
         </div>
       </div>
