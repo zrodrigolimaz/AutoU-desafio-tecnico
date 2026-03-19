@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useRef, useState, useEffect } from 'react'
 import { Upload, FileText, X, ArrowRight, Files } from 'lucide-react'
 import type { InputMode } from '../types'
 
@@ -14,6 +14,33 @@ export function EmailInput({ onSubmit, onSubmitBatch, disabled }: Props) {
   const [files, setFiles] = useState<File[]>([])
   const [dragOver, setDragOver] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const [textareaHeight, setTextareaHeight] = useState<number | null>(null)
+  const resizeDragRef = useRef<{ startY: number; startHeight: number } | null>(null)
+
+  const handleResizeMouseDown = (e: React.MouseEvent) => {
+    if (!textareaRef.current) return
+    e.preventDefault()
+    resizeDragRef.current = {
+      startY: e.clientY,
+      startHeight: textareaRef.current.getBoundingClientRect().height,
+    }
+  }
+
+  useEffect(() => {
+    const onMouseMove = (e: MouseEvent) => {
+      if (!resizeDragRef.current) return
+      const delta = e.clientY - resizeDragRef.current.startY
+      setTextareaHeight(Math.max(120, resizeDragRef.current.startHeight + delta))
+    }
+    const onMouseUp = () => { resizeDragRef.current = null }
+    window.addEventListener('mousemove', onMouseMove)
+    window.addEventListener('mouseup', onMouseUp)
+    return () => {
+      window.removeEventListener('mousemove', onMouseMove)
+      window.removeEventListener('mouseup', onMouseUp)
+    }
+  }, [])
 
   const addFiles = (incoming: File[]) => {
     const allowed = ['text/plain', 'application/pdf']
@@ -79,14 +106,24 @@ export function EmailInput({ onSubmit, onSubmitBatch, disabled }: Props) {
 
       {/* Input area */}
       {mode === 'text' ? (
-        <textarea
-          value={text}
-          onChange={e => setText(e.target.value)}
-          disabled={disabled}
-          placeholder="Cole o conteúdo do email aqui..."
-          rows={9}
-          className="w-full bg-bg-elevated border border-border-subtle rounded p-4 text-sm font-sans text-text-primary placeholder:text-text-muted resize-y focus:outline-none focus:border-border-default transition-colors duration-150 disabled:opacity-40 [scrollbar-gutter:stable]"
-        />
+        <div className="relative">
+          <textarea
+            ref={textareaRef}
+            value={text}
+            onChange={e => setText(e.target.value)}
+            disabled={disabled}
+            placeholder="Cole o conteúdo do email aqui..."
+            rows={9}
+            style={textareaHeight ? { height: textareaHeight } : undefined}
+            className="w-full bg-bg-elevated border border-border-subtle rounded p-4 pb-6 text-sm font-sans text-text-primary placeholder:text-text-muted resize-none overflow-y-auto focus:outline-none focus:border-border-default transition-colors duration-150 disabled:opacity-40 [scrollbar-gutter:stable]"
+          />
+          <div
+            onMouseDown={handleResizeMouseDown}
+            className="absolute bottom-0 left-0 right-0 h-5 flex items-center justify-center cursor-ns-resize select-none group"
+          >
+            <div className="w-8 h-1 rounded-full bg-border-subtle group-hover:bg-border-default transition-colors duration-150" />
+          </div>
+        </div>
       ) : (
         <div className="flex flex-col gap-3">
           {/* Drop zone */}
