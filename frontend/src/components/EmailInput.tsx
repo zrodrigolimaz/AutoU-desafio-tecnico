@@ -140,7 +140,7 @@ export function EmailInput({ onSubmit, disabled }: Props) {
         disabled={!canSubmit}
         className={`flex items-center justify-center gap-2 w-full py-3 rounded font-display font-bold text-sm tracking-wide transition-all duration-200 ${
           canSubmit
-            ? 'bg-accent-lime text-bg-base hover:brightness-90'
+            ? 'bg-text-primary text-bg-base hover:bg-white transition-colors'
             : 'bg-bg-elevated text-text-muted cursor-not-allowed'
         }`}
       >

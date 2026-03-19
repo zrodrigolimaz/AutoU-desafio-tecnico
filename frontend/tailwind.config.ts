@@ -26,6 +26,7 @@ export default {
         },
         accent: {
           lime: '#C8FF00',
+          blue: '#2D7CF6',
           productive: '#4ADE80',
           improductive: '#FF5555',
         },
