@@ -44,26 +44,26 @@ export function EmailInput({ onSubmit, disabled }: Props) {
   return (
     <div className="flex flex-col gap-5">
       {/* Tabs */}
-      <div className="flex gap-1 p-1 bg-bg-surface rounded-lg border border-border-subtle w-fit">
+      <div className="flex gap-0 border border-border-subtle rounded w-fit overflow-hidden">
         {(['text', 'upload'] as InputMode[]).map(m => (
           <button
             key={m}
             onClick={() => setMode(m)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
+            className={`flex items-center gap-2 px-4 py-2 text-xs font-mono tracking-wide transition-all duration-150 ${
               mode === m
-                ? 'bg-bg-elevated text-text-primary shadow-sm'
-                : 'text-text-muted hover:text-text-secondary'
+                ? 'bg-bg-elevated text-text-primary'
+                : 'text-text-muted hover:text-text-secondary bg-transparent'
             }`}
           >
             {m === 'text' ? (
               <>
-                <FileText size={14} />
+                <FileText size={12} />
                 Colar texto
               </>
             ) : (
               <>
-                <Upload size={14} />
-                Upload de arquivo
+                <Upload size={12} />
+                Upload
               </>
             )}
           </button>
@@ -78,7 +78,7 @@ export function EmailInput({ onSubmit, disabled }: Props) {
           disabled={disabled}
           placeholder="Cole o conteúdo do email aqui..."
           rows={9}
-          className="w-full bg-bg-surface border border-border-subtle rounded-xl p-4 text-sm font-sans text-text-primary placeholder:text-text-muted resize-none focus:outline-none focus:border-accent-blue transition-colors duration-200 disabled:opacity-50"
+          className="w-full bg-bg-elevated border border-border-subtle rounded p-4 text-sm font-sans text-text-primary placeholder:text-text-muted resize-none focus:outline-none focus:border-border-default transition-colors duration-150 disabled:opacity-40"
         />
       ) : (
         <div
@@ -86,12 +86,12 @@ export function EmailInput({ onSubmit, disabled }: Props) {
           onDragLeave={() => setDragOver(false)}
           onDrop={handleDrop}
           onClick={() => !file && fileInputRef.current?.click()}
-          className={`relative flex flex-col items-center justify-center gap-3 h-52 rounded-xl border-2 border-dashed transition-all duration-200 cursor-pointer ${
+          className={`relative flex flex-col items-center justify-center gap-3 h-48 rounded border-2 border-dashed transition-all duration-150 cursor-pointer ${
             dragOver
-              ? 'border-accent-blue bg-accent-blue/5'
+              ? 'border-accent-lime bg-accent-lime/[0.03]'
               : file
-              ? 'border-border-default bg-bg-surface cursor-default'
-              : 'border-border-subtle bg-bg-surface hover:border-border-default hover:bg-bg-elevated'
+              ? 'border-border-default bg-bg-elevated cursor-default'
+              : 'border-border-subtle bg-bg-elevated hover:border-border-default'
           }`}
         >
           <input
@@ -103,31 +103,31 @@ export function EmailInput({ onSubmit, disabled }: Props) {
           />
           {file ? (
             <>
-              <div className="flex items-center gap-3 px-4 py-3 bg-bg-elevated rounded-lg border border-border-default">
-                <FileText size={18} className="text-accent-blue" />
+              <div className="flex items-center gap-3 px-4 py-2.5 bg-bg-surface border border-border-subtle rounded">
+                <FileText size={15} className="text-accent-lime" />
                 <span className="text-sm text-text-primary font-medium truncate max-w-[200px]">{file.name}</span>
                 <button
                   onClick={e => { e.stopPropagation(); setFile(null) }}
                   className="text-text-muted hover:text-text-primary transition-colors"
                 >
-                  <X size={14} />
+                  <X size={13} />
                 </button>
               </div>
-              <p className="text-xs text-text-muted">
+              <p className="text-xs font-mono text-text-muted">
                 {(file.size / 1024).toFixed(1)} KB
               </p>
             </>
           ) : (
             <>
-              <div className="w-12 h-12 rounded-xl bg-bg-elevated border border-border-default flex items-center justify-center">
-                <Upload size={20} className="text-text-muted" />
+              <div className="w-10 h-10 bg-bg-surface border border-border-subtle rounded flex items-center justify-center">
+                <Upload size={16} className="text-text-muted" />
               </div>
               <div className="text-center">
                 <p className="text-sm text-text-secondary">
                   Arraste um arquivo ou{' '}
-                  <span className="text-accent-blue">clique para selecionar</span>
+                  <span className="text-accent-lime">clique para selecionar</span>
                 </p>
-                <p className="text-xs text-text-muted mt-1">.txt ou .pdf — até 5 MB</p>
+                <p className="text-xs font-mono text-text-muted mt-1">.txt ou .pdf — até 5 MB</p>
               </div>
             </>
           )}
@@ -138,21 +138,21 @@ export function EmailInput({ onSubmit, disabled }: Props) {
       <button
         onClick={handleSubmit}
         disabled={!canSubmit}
-        className={`flex items-center justify-center gap-2 w-full py-3 rounded-xl font-medium text-sm transition-all duration-300 ${
+        className={`flex items-center justify-center gap-2 w-full py-3 rounded font-display font-bold text-sm tracking-wide transition-all duration-200 ${
           canSubmit
-            ? 'bg-accent-blue text-white hover:bg-blue-500 shadow-lg shadow-accent-blue/20 hover:shadow-accent-blue/30'
+            ? 'bg-accent-lime text-bg-base hover:brightness-90'
             : 'bg-bg-elevated text-text-muted cursor-not-allowed'
         }`}
       >
         {disabled ? (
           <span className="flex items-center gap-2">
-            <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            <span className="w-3.5 h-3.5 border-2 border-bg-base/30 border-t-bg-base rounded-full animate-spin" />
             Analisando...
           </span>
         ) : (
           <>
             Analisar Email
-            <ArrowRight size={15} />
+            <ArrowRight size={14} strokeWidth={2.5} />
           </>
         )}
       </button>
