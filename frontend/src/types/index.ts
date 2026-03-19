@@ -3,6 +3,8 @@ export type Category = 'Produtivo' | 'Improdutivo'
 export interface ClassifyResult {
   category: Category
   confidence: number
+  topic: string
+  urgency: 'Alta' | 'Média' | 'Baixa'
   suggested_reply: string
   processed_text: string
 }

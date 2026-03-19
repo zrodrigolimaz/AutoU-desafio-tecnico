@@ -35,13 +35,15 @@ for i, (text, expected) in enumerate(CASES, 1):
     data = resp.json()
     got = data.get("category", "ERRO")
     confidence = data.get("confidence", 0)
+    topic = data.get("topic", "-")
+    urgency = data.get("urgency", "-")
     ok = got == expected
     if ok:
         correct += 1
     else:
         errors.append((i, expected, got, confidence, text))
     status = "✅" if ok else "❌"
-    print(f"{status} Caso {i:02d} | esperado={expected:<12} got={got:<12} conf={confidence:.2f} | {text[:55]}")
+    print(f"{status} Caso {i:02d} | {got:<11} | {urgency:<6} | {topic[:20]:<20} | {text[:45]}")
 
 print(f"\nResultado: {correct}/{len(CASES)} corretos ({correct/len(CASES)*100:.0f}%)")
 

@@ -1,3 +1,4 @@
+from typing import Union
 from fastapi import APIRouter, File, Form, HTTPException, UploadFile
 from fastapi.responses import JSONResponse
 
@@ -14,8 +15,8 @@ MAX_FILE_SIZE = 5 * 1024 * 1024  # 5 MB
 
 @router.post("/classify", response_model=ClassifyResponse)
 async def classify_email(
-    file: UploadFile | None = File(default=None),
-    text: str | None = Form(default=None),
+    file: Union[UploadFile, None] = File(default=None),
+    text: Union[str, None] = Form(default=None),
 ) -> ClassifyResponse:
     # --- Validação de entrada ---
     if not file and not text:
@@ -30,6 +31,8 @@ async def classify_email(
             raise HTTPException(status_code=422, detail="Nome de arquivo inválido.")
         try:
             raw_text = extract_from_bytes(content, file.filename)
+            if len(raw_text.strip()) < 10:
+                raise HTTPException(status_code=422, detail="O arquivo não contém texto suficiente para análise.")
         except ValueError as exc:
             raise HTTPException(status_code=422, detail=str(exc)) from exc
     else:
@@ -40,9 +43,11 @@ async def classify_email(
     # --- Pipeline NLP ---
     try:
         processed_text = preprocess(raw_text)
-        category, confidence = classify(raw_text)
+        result = classify(raw_text)
+        category = result["category"]
         suggested_reply = generate_reply(raw_text, category)
     except Exception as exc:
+        print(f"DEBUG: Erro na classificação: {exc}")
         raise HTTPException(
             status_code=502,
             detail=f"Erro na API de IA: {exc}",
@@ -50,7 +55,9 @@ async def classify_email(
 
     return ClassifyResponse(
         category=category,
-        confidence=confidence,
+        confidence=result["confidence"],
+        topic=result["topic"],
+        urgency=result["urgency"],
         suggested_reply=suggested_reply,
         processed_text=processed_text,
     )

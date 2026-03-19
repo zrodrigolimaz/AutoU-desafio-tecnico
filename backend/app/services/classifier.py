@@ -12,33 +12,38 @@ from google import genai
 
 _PROMPT = """Você é um classificador de emails corporativos de uma empresa do setor financeiro.
 
-Classifique o email abaixo como PRODUTIVO ou IMPRODUTIVO usando os critérios:
+### INSTRUÇÃO:
+Classifique o email abaixo como PRODUTIVO ou IMPRODUTIVO e extraia os metadados solicitados.
+Responda APENAS com um objeto JSON válido. Não inclua nenhuma outra palavra, explicação ou bloco de código markdown.
 
-PRODUTIVO: email que exige ação concreta e tem contexto suficiente para ser executada.
-Para ser PRODUTIVO, o email precisa ter os três elementos:
-  1. Ação clara (o que precisa ser feito)
-  2. Contexto suficiente (sobre o quê, qual sistema, qual projeto)
-  3. Direcionamento (prazo, horário, próximo passo ou urgência)
-Exemplos: agendamento de reunião com horário definido, reporte de erro com detalhes, pedido de aprovação com prazo.
+1. CATEGORIA:
+   PRODUTIVO: requer ação concreta (agendamento, suporte, suporte técnico, aprovação).
+   IMPRODUTIVO: vago, sem ação, felicitação ou agradecimento genérico.
 
-IMPRODUTIVO: email vago, sem ação concreta, ou que não gera avanço real no trabalho.
-Classifique como IMPRODUTIVO quando:
-  - a solicitação for vaga ou sem contexto ("qualquer dia desses", "quando puder", "sem pressa") E não houver prazo nem contexto técnico
-  - não houver ação definida ou próximo passo claro
-  - for felicitação, agradecimento genérico, aviso de férias ou confraternização
-Exemplos: "me liga qualquer dia desses", "você pode me ajudar com uma dúvida?", "feliz aniversário".
+2. ASSUNTO (TOPIC):
+   Resumo do tema central em até 4 palavras.
 
-REGRA DE PRIORIDADE: se o email tiver linguagem suave ("quando puder", "quando tiver um tempo") MAS também tiver prazo explícito ("hoje", "amanhã", "até sexta") OU contexto técnico crítico ("erro em produção", "sistema fora", "deploy", "bug"), classifique como PRODUTIVO.
+3. URGÊNCIA:
+   - ALTA: Erros críticos, sistemas fora, prazos de hoje.
+   - MÉDIA: Dúvidas ou tarefas com prazos futuros.
+   - BAIXA: Informativos e agradecimentos.
 
-Email:
+### EMAIL PARA ANALISAR:
+---INÍCIO DO EMAIL---
 {email}
+---FIM DO EMAIL---
 
-Responda APENAS com JSON válido, sem markdown, no formato:
-{{"category": "Produtivo" ou "Improdutivo", "confidence": número entre 0.0 e 1.0}}"""
+### FORMATO DA RESPOSTA (JSON APENAS):
+{{
+  "category": "Produtivo",
+  "confidence": 0.95,
+  "topic": "assunto extraído",
+  "urgency": "Baixa"
+}}"""
 
 
-def classify(text: str) -> tuple[Literal["Produtivo", "Improdutivo"], float]:
-    """Retorna (categoria, confiança) via Gemini."""
+def classify(text: str) -> dict:
+    """Retorna dicionário com categoria, confiança, assunto e urgência via Gemini."""
     client = genai.Client(api_key=os.environ["GOOGLE_API_KEY"])
 
     prompt = _PROMPT.format(email=text[:2000])
@@ -57,8 +62,24 @@ def classify(text: str) -> tuple[Literal["Produtivo", "Improdutivo"], float]:
             raw = raw[4:]
         raw = raw.strip()
 
-    data = json.loads(raw)
-    category: Literal["Produtivo", "Improdutivo"] = data["category"]
-    confidence: float = round(float(data["confidence"]), 4)
+    try:
+        data = json.loads(raw)
+        
+        # Normalização para bater com os Literals do Pydantic
+        category = str(data.get("category", "Improdutivo")).capitalize()
+        if category not in ["Produtivo", "Improdutivo"]:
+            category = "Improdutivo"
+            
+        urgency = str(data.get("urgency", "Baixa")).capitalize()
+        if urgency == "Media": urgency = "Média"
+        if urgency not in ["Alta", "Média", "Baixa"]:
+            urgency = "Baixa"
 
-    return category, confidence
+        return {
+            "category": category,
+            "confidence": round(float(data.get("confidence", 0.5)), 4),
+            "topic": data.get("topic", "Desconhecido"),
+            "urgency": urgency
+        }
+    except (json.JSONDecodeError, ValueError, KeyError) as exc:
+        raise ValueError(f"O modelo retornou um formato inválido: {raw[:200]}") from exc
