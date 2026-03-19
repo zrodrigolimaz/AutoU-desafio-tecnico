@@ -16,6 +16,13 @@ export interface HistoryItem {
   result: ClassifyResult
 }
 
+export interface BatchResultItem {
+  filename: string
+  result: ClassifyResult | null
+  error: string | null
+  status: 'pending' | 'processing' | 'done' | 'error'
+}
+
 export type InputMode = 'upload' | 'text'
 
 export type ProcessingStep = {

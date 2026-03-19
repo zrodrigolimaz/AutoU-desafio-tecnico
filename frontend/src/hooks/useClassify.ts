@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react'
 import { classifyEmail } from '../lib/api'
-import type { ClassifyResult, HistoryItem, ProcessingStep } from '../types'
+import type { BatchResultItem, ClassifyResult, HistoryItem, ProcessingStep } from '../types'
 
 const INITIAL_STEPS: ProcessingStep[] = [
   { id: 'extract', label: 'Extraindo texto do email', status: 'pending' },
@@ -12,6 +12,7 @@ const INITIAL_STEPS: ProcessingStep[] = [
 export function useClassify() {
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<ClassifyResult | null>(null)
+  const [batchResults, setBatchResults] = useState<BatchResultItem[]>([])
   const [error, setError] = useState<string | null>(null)
   const [steps, setSteps] = useState<ProcessingStep[]>(INITIAL_STEPS)
   const [history, setHistory] = useState<HistoryItem[]>([])
@@ -32,9 +33,20 @@ export function useClassify() {
     setSteps(prev => prev.map(s => ({ ...s, status: 'done' })))
   }
 
+  const addToHistory = (preview: string, data: ClassifyResult) => {
+    const item: HistoryItem = {
+      id: crypto.randomUUID(),
+      timestamp: new Date(),
+      preview: preview.slice(0, 80),
+      result: data,
+    }
+    setHistory(prev => [item, ...prev].slice(0, 20))
+  }
+
   const classify = useCallback(async (payload: { file?: File; text?: string }, preview: string) => {
     setLoading(true)
     setResult(null)
+    setBatchResults([])
     setError(null)
     setSteps(INITIAL_STEPS)
 
@@ -53,14 +65,7 @@ export function useClassify() {
       await sleep(300)
 
       setResult(data)
-
-      const item: HistoryItem = {
-        id: crypto.randomUUID(),
-        timestamp: new Date(),
-        preview: preview.slice(0, 80),
-        result: data,
-      }
-      setHistory(prev => [item, ...prev].slice(0, 20))
+      addToHistory(preview, data)
     } catch {
       setError('Erro ao processar o email. Verifique a conexão com o servidor.')
       setSteps(INITIAL_STEPS)
@@ -69,7 +74,42 @@ export function useClassify() {
     }
   }, [])
 
-  return { loading, result, error, steps, history, classify }
+  const classifyBatch = useCallback(async (files: File[]) => {
+    setLoading(true)
+    setResult(null)
+    setError(null)
+    setSteps(INITIAL_STEPS)
+    setBatchResults(files.map(f => ({
+      filename: f.name,
+      result: null,
+      error: null,
+      status: 'pending',
+    })))
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i]
+
+      setBatchResults(prev =>
+        prev.map((item, idx) => idx === i ? { ...item, status: 'processing' } : item)
+      )
+
+      try {
+        const data = await classifyEmail({ file })
+        setBatchResults(prev =>
+          prev.map((item, idx) => idx === i ? { ...item, result: data, status: 'done' } : item)
+        )
+        addToHistory(file.name, data)
+      } catch {
+        setBatchResults(prev =>
+          prev.map((item, idx) => idx === i ? { ...item, error: 'Erro ao processar arquivo.', status: 'error' } : item)
+        )
+      }
+    }
+
+    setLoading(false)
+  }, [])
+
+  return { loading, result, batchResults, error, steps, history, classify, classifyBatch }
 }
 
 function sleep(ms: number) {

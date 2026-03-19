@@ -3,6 +3,7 @@ import { Moon, Sun } from 'lucide-react'
 import { EmailInput } from '../components/EmailInput'
 import { ProcessingSteps } from '../components/ProcessingSteps'
 import { ResultCard } from '../components/ResultCard'
+import { BatchResultList } from '../components/BatchResultList'
 import { HistoryList } from '../components/HistoryList'
 import { useClassify } from '../hooks/useClassify'
 import type { HistoryItem } from '../types'
@@ -14,14 +15,20 @@ interface Props {
 }
 
 export function Home({ theme, toggleTheme }: Props) {
-  const { loading, result, error, steps, history, classify } = useClassify()
+  const { loading, result, batchResults, error, steps, history, classify, classifyBatch } = useClassify()
   const [selectedHistory, setSelectedHistory] = useState<HistoryItem | null>(null)
 
   const displayResult = selectedHistory?.result ?? result
+  const isBatch = batchResults.length > 0
 
   const handleSubmit = (payload: { file?: File; text?: string }, preview: string) => {
     setSelectedHistory(null)
     classify(payload, preview)
+  }
+
+  const handleSubmitBatch = (files: File[]) => {
+    setSelectedHistory(null)
+    classifyBatch(files)
   }
 
   return (
@@ -84,7 +91,11 @@ export function Home({ theme, toggleTheme }: Props) {
               <p className="text-[10px] font-mono text-text-muted tracking-[0.18em] uppercase mb-5">
                 — Email para análise
               </p>
-              <EmailInput onSubmit={handleSubmit} disabled={loading} />
+              <EmailInput
+                onSubmit={handleSubmit}
+                onSubmitBatch={handleSubmitBatch}
+                disabled={loading}
+              />
             </div>
 
             {/* Error */}
@@ -94,13 +105,16 @@ export function Home({ theme, toggleTheme }: Props) {
               </div>
             )}
 
-            {/* Processing steps */}
-            {loading && <ProcessingSteps steps={steps} />}
+            {/* Processing steps — single mode only */}
+            {loading && !isBatch && <ProcessingSteps steps={steps} />}
 
-            {/* Result */}
-            {!loading && displayResult && (
+            {/* Single result */}
+            {!loading && !isBatch && displayResult && (
               <ResultCard result={displayResult} />
             )}
+
+            {/* Batch results */}
+            {isBatch && <BatchResultList items={batchResults} />}
           </div>
 
           {/* Right: History sidebar */}
