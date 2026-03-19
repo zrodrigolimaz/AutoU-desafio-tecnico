@@ -57,10 +57,13 @@ jobs:
           port: 8000
           cpu: 0.25
           memory: 0.5
-          wait-for-service-stability: true
-          env-vars: |
-            GOOGLE_API_KEY=${{ secrets.GOOGLE_API_KEY }}
-            CORS_ORIGINS=${{ secrets.CLOUDFRONT_URL }}
+          wait-for-service-stability-seconds: 300
+          copy-env-vars: |
+            GOOGLE_API_KEY
+            CORS_ORIGINS
+        env:
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          CORS_ORIGINS: ${{ secrets.CLOUDFRONT_URL }}
 
       - name: Get App Runner service URL
         id: get-url
