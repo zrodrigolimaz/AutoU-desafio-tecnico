@@ -1,0 +1,15 @@
+Assunto: Problema no acesso ao sistema de relatórios financeiros
+
+Bom dia,
+
+Estou tentando acessar o módulo de relatórios financeiros desde ontem, mas continuo recebendo a mensagem "Acesso negado – permissão insuficiente".
+
+Preciso urgentemente extrair os dados do fechamento do mês de outubro para apresentar na reunião de board amanhã às 14h. Já tentei limpar o cache do navegador e usar outros navegadores, mas o problema persiste.
+
+Poderia verificar minhas permissões de acesso? Meu usuário é jsilva@empresa.com.br.
+
+Aguardo retorno o quanto antes.
+
+Atenciosamente,
+João Silva
+Gerente de Controladoria
