@@ -85,7 +85,7 @@ export function EmailInput({ onSubmit, onSubmitBatch, disabled }: Props) {
           disabled={disabled}
           placeholder="Cole o conteúdo do email aqui..."
           rows={9}
-          className="w-full bg-bg-elevated border border-border-subtle rounded p-4 text-sm font-sans text-text-primary placeholder:text-text-muted resize-none focus:outline-none focus:border-border-default transition-colors duration-150 disabled:opacity-40"
+          className="w-full bg-bg-elevated border border-border-subtle rounded p-4 text-sm font-sans text-text-primary placeholder:text-text-muted resize-y focus:outline-none focus:border-border-default transition-colors duration-150 disabled:opacity-40"
         />
       ) : (
         <div className="flex flex-col gap-3">

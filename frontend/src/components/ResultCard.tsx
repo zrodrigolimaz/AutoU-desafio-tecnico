@@ -141,7 +141,7 @@ export function ResultCard({ result }: Props) {
           <textarea
             value={editableReply}
             onChange={(e) => setEditableReply(e.target.value)}
-            className="w-full min-h-[140px] bg-bg-elevated/50 text-sm text-text-secondary leading-relaxed p-4 rounded-xl border border-border-subtle focus:border-accent-lime/30 focus:ring-1 focus:ring-accent-lime/20 outline-none transition-all resize-none shadow-inner"
+            className="w-full min-h-[140px] bg-bg-elevated/50 text-sm text-text-secondary leading-relaxed p-4 rounded-xl border border-border-subtle focus:border-accent-lime/30 focus:ring-1 focus:ring-accent-lime/20 outline-none transition-all resize-y shadow-inner"
             placeholder="A resposta sugerida aparecerá aqui..."
           />
           <div className="absolute right-3 bottom-3 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
