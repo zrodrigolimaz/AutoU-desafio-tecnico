@@ -2,8 +2,40 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─── Dark theme (default) ─── */
 :root {
-  --accent-current: #C8FF00;
+  --bg-base:             12 12 12;
+  --bg-surface:          20 20 20;
+  --bg-elevated:         28 28 28;
+  --border-subtle:       37 37 37;
+  --border-default:      51 51 51;
+  --text-primary:        240 240 240;
+  --text-secondary:      138 138 138;
+  --text-muted:          80 80 80;
+  --accent-lime:         200 255 0;
+  --accent-productive:   74 222 128;
+  --accent-improductive: 255 85 85;
+  --urgency-alta:        255 85 85;
+  --urgency-media:       251 191 36;
+  --urgency-baixa:       74 222 128;
+}
+
+/* ─── Light theme ─── */
+html.light {
+  --bg-base:             245 245 240;
+  --bg-surface:          255 255 255;
+  --bg-elevated:         235 235 230;
+  --border-subtle:       218 218 212;
+  --border-default:      196 196 190;
+  --text-primary:        17 17 17;
+  --text-secondary:      80 80 80;
+  --text-muted:          150 150 150;
+  --accent-lime:         90 140 0;
+  --accent-productive:   22 163 74;
+  --accent-improductive: 220 38 38;
+  --urgency-alta:        220 38 38;
+  --urgency-media:       202 138 4;
+  --urgency-baixa:       22 163 74;
 }
 
 * {
@@ -15,11 +47,12 @@ html {
 }
 
 body {
-  background-color: #0C0C0C;
-  color: #F0F0F0;
+  background-color: rgb(var(--bg-base));
+  color: rgb(var(--text-primary));
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 /* Film grain overlay */
@@ -39,6 +72,21 @@ body::after {
   animation: grain 8s steps(10) infinite;
 }
 
+html.light body::after {
+  opacity: 0.015;
+}
+
+/* Glass effect */
+.glass {
+  background: rgb(var(--bg-surface) / 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.glass-border {
+  border: 1px solid rgb(var(--border-subtle));
+}
+
 @keyframes grain {
   0%   { transform: translate(0, 0); }
   10%  { transform: translate(-5%, -5%); }
@@ -55,28 +103,22 @@ body::after {
 
 /* Drag over state */
 .drag-active {
-  border-color: #C8FF00 !important;
-  background-color: rgba(200, 255, 0, 0.03) !important;
+  border-color: rgb(var(--accent-lime)) !important;
+  background-color: rgb(var(--accent-lime) / 0.03) !important;
 }
 
 /* Scrollbar */
-::-webkit-scrollbar {
-  width: 3px;
-}
-::-webkit-scrollbar-track {
-  background: #0C0C0C;
-}
-::-webkit-scrollbar-thumb {
-  background: #2A2A2A;
-}
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: rgb(var(--bg-base)); }
+::-webkit-scrollbar-thumb { background: rgb(var(--border-default)); }
 
 /* Shimmer loading skeleton */
 .shimmer {
   background: linear-gradient(
     90deg,
-    #141414 25%,
-    #1C1C1C 50%,
-    #141414 75%
+    rgb(var(--bg-surface)) 25%,
+    rgb(var(--bg-elevated)) 50%,
+    rgb(var(--bg-surface)) 75%
   );
   background-size: 200% 100%;
   animation: shimmer 2s linear infinite;
@@ -90,5 +132,5 @@ body::after {
 /* Step connector line */
 .step-line {
   width: 1px;
-  background: linear-gradient(to bottom, #333, transparent);
+  background: linear-gradient(to bottom, rgb(var(--border-default)), transparent);
 }

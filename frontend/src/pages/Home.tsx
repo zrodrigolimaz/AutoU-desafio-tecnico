@@ -1,12 +1,19 @@
 import { useState } from 'react'
+import { Moon, Sun } from 'lucide-react'
 import { EmailInput } from '../components/EmailInput'
 import { ProcessingSteps } from '../components/ProcessingSteps'
 import { ResultCard } from '../components/ResultCard'
 import { HistoryList } from '../components/HistoryList'
 import { useClassify } from '../hooks/useClassify'
 import type { HistoryItem } from '../types'
+import type { Theme } from '../hooks/useTheme'
 
-export function Home() {
+interface Props {
+  theme: Theme
+  toggleTheme: () => void
+}
+
+export function Home({ theme, toggleTheme }: Props) {
   const { loading, result, error, steps, history, classify } = useClassify()
   const [selectedHistory, setSelectedHistory] = useState<HistoryItem | null>(null)
 
@@ -33,11 +40,20 @@ export function Home() {
               </span>
             </div>
           </div>
-          <div className="flex items-center gap-2 mb-0.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-accent-lime animate-pulse-dot" />
-            <span className="text-[10px] font-mono text-text-muted tracking-[0.15em] uppercase">
-              Sistema Ativo
-            </span>
+          <div className="flex items-center gap-4 mb-0.5">
+            <button
+              onClick={toggleTheme}
+              className="flex items-center justify-center w-7 h-7 rounded-lg border border-border-subtle bg-bg-surface text-text-muted hover:text-text-primary hover:border-border-default transition-colors"
+              aria-label="Alternar tema"
+            >
+              {theme === 'dark' ? <Sun size={13} /> : <Moon size={13} />}
+            </button>
+            <div className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-accent-lime animate-pulse-dot" />
+              <span className="text-[10px] font-mono text-text-muted tracking-[0.15em] uppercase">
+                Sistema Ativo
+              </span>
+            </div>
           </div>
         </header>
 

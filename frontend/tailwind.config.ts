@@ -11,24 +11,24 @@ export default {
       },
       colors: {
         bg: {
-          base: '#0C0C0C',
-          surface: '#141414',
-          elevated: '#1C1C1C',
+          base:     'rgb(var(--bg-base) / <alpha-value>)',
+          surface:  'rgb(var(--bg-surface) / <alpha-value>)',
+          elevated: 'rgb(var(--bg-elevated) / <alpha-value>)',
         },
         border: {
-          subtle: '#252525',
-          default: '#333333',
+          subtle:  'rgb(var(--border-subtle) / <alpha-value>)',
+          default: 'rgb(var(--border-default) / <alpha-value>)',
         },
         text: {
-          primary: '#F0F0F0',
-          secondary: '#8A8A8A',
-          muted: '#505050',
+          primary:   'rgb(var(--text-primary) / <alpha-value>)',
+          secondary: 'rgb(var(--text-secondary) / <alpha-value>)',
+          muted:     'rgb(var(--text-muted) / <alpha-value>)',
         },
         accent: {
-          lime: '#C8FF00',
-          blue: '#2D7CF6',
-          productive: '#4ADE80',
-          improductive: '#FF5555',
+          lime:         'rgb(var(--accent-lime) / <alpha-value>)',
+          blue:         '#2D7CF6',
+          productive:   'rgb(var(--accent-productive) / <alpha-value>)',
+          improductive: 'rgb(var(--accent-improductive) / <alpha-value>)',
         },
       },
       keyframes: {
