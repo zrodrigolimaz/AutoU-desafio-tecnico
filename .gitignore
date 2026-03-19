@@ -15,6 +15,9 @@ venv/
 env/
 .env
 
+# Local deploy config (valores reais — não commitar)
+infrastructure/.env.deploy
+
 # Temporary
 /tmp/
 *.log

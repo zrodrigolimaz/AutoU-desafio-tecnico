@@ -59,10 +59,10 @@ jobs:
           memory: 0.5
           wait-for-service-stability: true
           copy-env-vars: |
-            HF_API_KEY
+            GOOGLE_API_KEY
             CORS_ORIGINS
         env:
-          HF_API_KEY: ${{ secrets.HF_API_KEY }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
           CORS_ORIGINS: ${{ secrets.CLOUDFRONT_URL }}
 
       - name: Get App Runner service URL

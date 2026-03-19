@@ -6,11 +6,14 @@
       "ImageConfiguration": {
         "Port": "8000",
         "RuntimeEnvironmentVariables": {
-          "GOOGLE_API_KEY": "SUBSTITUA_PELA_CHAVE_DO_GOOGLE",
+          "GOOGLE_API_KEY": "REPLACE_WITH_GOOGLE_KEY",
           "CORS_ORIGINS": "https://SEU_DOMINIO_CLOUDFRONT.cloudfront.net"
         }
       },
       "ImageRepositoryType": "ECR"
+    },
+    "AuthenticationConfiguration": {
+      "AccessRoleArn": "arn:aws:iam::ACCOUNT_ID:role/AppRunnerECRAccessRole"
     },
     "AutoDeploymentsEnabled": true
   },

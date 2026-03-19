@@ -10,19 +10,22 @@
 # =============================================================================
 set -euo pipefail
 
-# ---------- Configuração — edite aqui ----------
-AWS_REGION="us-east-1"
-S3_BUCKET="meridian-frontend-prod"          # nome único global
-CLOUDFRONT_DISTRIBUTION_ID=""               # preencha após criar a distribuição
-VITE_API_URL="https://SEU_APP_RUNNER_URL"   # URL do App Runner
-# ------------------------------------------------
+# ---------- Configuração — edite aqui ou exporte as vars antes de rodar ----------
+AWS_REGION="${AWS_REGION:-us-east-1}"
+S3_BUCKET="${S3_BUCKET:-}"                          # ex: meridian-frontend-<account-id>
+CLOUDFRONT_DISTRIBUTION_ID="${CLOUDFRONT_DISTRIBUTION_ID:-}"  # ID da distribuição CloudFront
+VITE_API_URL="${VITE_API_URL:-}"                    # URL do App Runner
+# ---------------------------------------------------------------------------------
+
+# Valida variáveis obrigatórias
+: "${S3_BUCKET:?Defina S3_BUCKET antes de rodar}"
+: "${VITE_API_URL:?Defina VITE_API_URL antes de rodar}"
 
 echo "==> [1/4] Criando bucket S3 (se não existir)..."
 aws s3api head-bucket --bucket "$S3_BUCKET" 2>/dev/null \
   || aws s3api create-bucket \
        --bucket "$S3_BUCKET" \
-       --region "$AWS_REGION" \
-       --create-bucket-configuration LocationConstraint="$AWS_REGION"
+       --region "$AWS_REGION"
 
 # Bloqueia acesso público direto (CloudFront será a origem)
 aws s3api put-public-access-block \
@@ -30,8 +33,9 @@ aws s3api put-public-access-block \
   --public-access-block-configuration \
     "BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true"
 
-echo "==> [2/4] Buildando o frontend React..."
+echo "==> [2/4] Instalando dependências e buildando o frontend..."
 cd "$(dirname "$0")/../frontend"
+npm install
 VITE_API_URL="$VITE_API_URL" npm run build
 
 echo "==> [3/4] Sincronizando com S3..."
