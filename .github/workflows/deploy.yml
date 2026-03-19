@@ -68,9 +68,9 @@ jobs:
       - name: Get App Runner service URL
         id: get-url
         run: |
-          URL=$(aws apprunner describe-service \
-            --service-arn ${{ steps.deploy.outputs.service-id }} \
-            --query "Service.ServiceUrl" --output text)
+          URL=$(aws apprunner list-services --region ${{ env.AWS_REGION }} \
+            --query "ServiceSummaryList[?ServiceName=='${{ env.APP_RUNNER_SERVICE }}'].ServiceUrl" \
+            --output text)
           echo "url=https://$URL" >> $GITHUB_OUTPUT
 
   # ─────────────────────────────────────────
