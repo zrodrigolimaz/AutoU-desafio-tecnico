@@ -12,7 +12,6 @@ export function ResultCard({ result }: Props) {
   const isProductive = result.category === 'Produtivo'
 
   const accentHex = isProductive ? '#4ADE80' : '#FF5555'
-  const borderClass = isProductive ? 'border-l-accent-productive' : 'border-l-accent-improductive'
 
   const copyReply = async () => {
     await navigator.clipboard.writeText(result.suggested_reply)
@@ -22,7 +21,7 @@ export function ResultCard({ result }: Props) {
 
   return (
     <div
-      className={`rounded border border-border-subtle border-l-4 ${borderClass} bg-bg-surface p-6 flex flex-col gap-5 animate-fade-up`}
+      className={`rounded border border-border-subtle bg-bg-surface p-6 flex flex-col gap-5 animate-fade-up`}
     >
       {/* Category badge */}
       <div className="flex items-center gap-3">
