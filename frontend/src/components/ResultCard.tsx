@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { Check, Copy, AlertCircle, Bookmark, MessageSquare } from 'lucide-react'
+import { Check, Copy, AlertCircle, Bookmark, MessageSquare, HelpCircle } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { ClassifyResult } from '../types'
 
@@ -107,6 +107,26 @@ export function ResultCard({ result }: Props) {
           <span className="text-[10px] font-mono font-bold" style={{ color: accentColor }}>
             {Math.round(result.confidence * 100)}%
           </span>
+          <div className="relative group/tip">
+            <HelpCircle size={11} className="text-text-muted/50 hover:text-text-muted cursor-default transition-colors" />
+            <div className="pointer-events-none absolute bottom-full right-0 mb-2 w-56 opacity-0 group-hover/tip:opacity-100 transition-opacity duration-150 z-10">
+              <div className="bg-bg-surface border border-border-subtle rounded p-3 shadow-lg text-[10px] font-mono text-text-muted space-y-2">
+                <p className="text-text-secondary font-semibold uppercase tracking-widest mb-1">O que significa?</p>
+                <div className="flex gap-2">
+                  <span className="text-[#4ADE80] font-bold shrink-0">≥ 90%</span>
+                  <span>Alta confiança — o modelo está muito seguro da classificação</span>
+                </div>
+                <div className="flex gap-2">
+                  <span className="text-yellow-400 font-bold shrink-0">70–89%</span>
+                  <span>Moderada — classificação provável, mas pode haver ambiguidade</span>
+                </div>
+                <div className="flex gap-2">
+                  <span className="text-[#FF5555] font-bold shrink-0">&lt; 70%</span>
+                  <span>Baixa — resultado incerto, vale revisar manualmente</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <div className="h-1.5 w-full bg-bg-elevated rounded-full overflow-hidden border border-border-subtle">
           <motion.div

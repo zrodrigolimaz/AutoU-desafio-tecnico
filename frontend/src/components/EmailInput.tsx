@@ -62,13 +62,20 @@ export function EmailInput({ onSubmit, onSubmitBatch, disabled }: Props) {
     addFiles(Array.from(e.dataTransfer.files))
   }, [])
 
+  const clearFiles = () => {
+    setFiles([])
+    if (fileInputRef.current) fileInputRef.current.value = ''
+  }
+
   const handleSubmit = () => {
     if (mode === 'text' && text.trim()) {
       onSubmit({ text: text.trim() }, text.trim())
     } else if (mode === 'upload' && files.length === 1) {
       onSubmit({ file: files[0] }, files[0].name)
+      clearFiles()
     } else if (mode === 'upload' && files.length > 1) {
       onSubmitBatch(files)
+      clearFiles()
     }
   }
 
